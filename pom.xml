@@ -17,9 +17,9 @@
     </properties>
 
     <modules>
-        <module>game-client</module>
-        <module>game-server</module>
-        <module>game-common</module>
+        <module>linkgame-client</module>
+        <module>linkgame-server</module>
+        <module>linkgame-common</module>
     </modules>
 
 </project>

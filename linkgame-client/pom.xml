@@ -9,7 +9,7 @@
         <version>1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>game-client</artifactId>
+    <artifactId>linkgame-client</artifactId>
 
     <name>game-client</name>
 
@@ -21,7 +21,7 @@
     <dependencies>
         <dependency>
             <groupId>io.github.octcarp.linkgame</groupId>
-            <artifactId>game-common</artifactId>
+            <artifactId>linkgame-common</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
         <dependency>

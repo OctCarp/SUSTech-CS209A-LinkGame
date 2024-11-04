@@ -1,4 +1,4 @@
-package io.github.octcarp.linkgame.client;
+package io.github.octcarp.linkgame.client.controller;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -33,7 +33,7 @@ public class Game {
         int numPairs = gridNum / 2;
         int piecesPerType = numPairs / GRID_TYPE_NUM;
 
-        for (int i = 0; i < GRID_TYPE_NUM; i++) {
+        for (int i = 1; i <= GRID_TYPE_NUM; i++) {
             for (int j = 0; j < piecesPerType; j++) {
                 pieces.add(i);
                 pieces.add(i);
@@ -133,5 +133,4 @@ public class Game {
         }
         return false;
     }
-
 }
