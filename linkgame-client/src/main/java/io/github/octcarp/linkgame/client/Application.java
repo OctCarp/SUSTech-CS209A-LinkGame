@@ -25,7 +25,7 @@ public class Application extends javafx.application.Application {
 
         // show login scene
         SceneSwitcher.getInstance().setPrimaryStage(primaryStage);
-        SceneSwitcher.getInstance().switchScene("login");  // 默认显示登录界面
+        SceneSwitcher.getInstance().switchScene("login");  // Default login scene
         primaryStage.setTitle("LinkGame");
         primaryStage.show();
 

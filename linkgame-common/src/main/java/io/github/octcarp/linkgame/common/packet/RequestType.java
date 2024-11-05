@@ -1,6 +1,6 @@
 package io.github.octcarp.linkgame.common.packet;
 
-public enum PkgType {
+public enum RequestType {
     REGISTER,
     LOGIN,
     DISCONNECT,
