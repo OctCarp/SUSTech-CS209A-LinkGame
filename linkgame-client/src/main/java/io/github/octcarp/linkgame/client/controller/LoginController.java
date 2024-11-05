@@ -2,30 +2,47 @@ package io.github.octcarp.linkgame.client.controller;
 
 import io.github.octcarp.linkgame.client.net.PlayerManager;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
-import javafx.scene.input.MouseEvent;
 
 public class LoginController {
 
     @FXML
-    public TextField nameField;
+    private TextField nameField;
 
     @FXML
-    public TextField passwdField;
+    private TextField passwdField;
 
     @FXML
-    public void clickLoginBtn(MouseEvent mouseEvent) {
-        System.out.println("Login button clicked");
+    public void initialize() {
+        nameField.setText("");
+        passwdField.setText("");
+    }
+
+    @FXML
+    public void handleLoginAction(ActionEvent actionEvent) {
         String name = nameField.getText();
         String passwd = passwdField.getText();
         if (name.isEmpty() || passwd.isEmpty()) {
-            System.out.println("Name or password is empty");
+            Alert alert = new Alert(Alert.AlertType.WARNING);
+            alert.setTitle("Login Warning");
+            alert.setHeaderText("Please fill in all fields");
+            alert.setContentText("ID and password cannot be empty");
+            alert.showAndWait();
             return;
         }
-        boolean loginSuccess =  PlayerManager.getInstance().playerLogin(name, passwd);
+
+        boolean loginSuccess = PlayerManager.getInstance().playerLogin(name, passwd);
         if (loginSuccess) {
-            SceneSwitcher.getInstance().switchScene("main-menu");
+            SceneSwitcher.getInstance().switchScene("main-menu.fxml");
+        } else {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Login Error");
+            alert.setHeaderText("Login failed");
+            alert.setContentText("Please check your password, or ID already taken");
+            alert.showAndWait();
         }
     }
 }

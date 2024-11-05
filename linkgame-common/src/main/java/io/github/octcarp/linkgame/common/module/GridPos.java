@@ -1,9 +1,17 @@
 package io.github.octcarp.linkgame.common.module;
 
-public record GridPos(int x, int y) {
+public record GridPos(int row, int col) {
     public GridPos {
-        if (x < 0 || y < 0) {
-            System.err.printf("Invalid grid position: (%d, %d)\n", x, y);
+        if (row < 0 || col < 0) {
+            System.err.printf("Invalid grid position: (%d, %d)\n", row, col);
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof GridPos pos) {
+            return row == pos.row && col == pos.col;
+        }
+        return false;
     }
 }

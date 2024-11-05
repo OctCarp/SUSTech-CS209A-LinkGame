@@ -102,7 +102,7 @@
                   </PasswordField>
                </children>
             </HBox>
-            <Button mnemonicParsing="false" onMouseClicked="#clickLoginBtn" prefHeight="242.0" prefWidth="315.0" style="-fx-background-color: #e0cfcf;" text="Login / Register">
+            <Button mnemonicParsing="false" onAction="#handleLoginAction" prefHeight="242.0" prefWidth="315.0" style="-fx-background-color: #e0cfcf;" text="Login / Register">
                <font>
                   <Font size="25.0" />
                </font>

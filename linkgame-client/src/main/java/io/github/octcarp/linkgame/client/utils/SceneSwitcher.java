@@ -29,17 +29,16 @@ public class SceneSwitcher {
         this.primaryStage = stage;
     }
 
-    public void switchScene(String sceneName) {
-        if (!scenes.containsKey(sceneName)) {
-            try {
-                FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + sceneName + ".fxml"));
-                Parent root = loader.load();
-                scenes.put(sceneName, new Scene(root));
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+    public void switchScene(String sceneFxml) {
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/views/" + sceneFxml));
+            Parent root = loader.load();
+            scenes.put(sceneFxml, new Scene(root));
+        } catch (IOException e) {
+            e.printStackTrace();
+            return;
         }
-        primaryStage.setScene(scenes.get(sceneName));
+
+        primaryStage.setScene(scenes.get(sceneFxml));
     }
 }

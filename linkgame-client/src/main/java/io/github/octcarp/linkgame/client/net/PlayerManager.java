@@ -16,17 +16,23 @@ public class PlayerManager {
         return instance;
     }
 
-    private boolean playerPass(PlayerRecord player) {
+    private boolean playerCheckAndReg(PlayerRecord player) {
         // Todo: send player info to server and check if the player is valid
         return true;
     }
 
     public boolean playerLogin(String name, String passwd) {
         PlayerRecord playerRecord = new PlayerRecord(name, passwd);
-        if (playerPass(playerRecord)) {
+        if (playerCheckAndReg(playerRecord)) {
             setCurrentPlayer(playerRecord);
+            return true;
         }
-        return true;
+        return false;
+    }
+
+    public void logout() {
+        // TODO: send logout request to server
+        currentPlayer = null;
     }
 
     private void setCurrentPlayer(PlayerRecord player) {
