@@ -26,6 +26,7 @@ public class MainMenuController {
     public void handleGameHistoryAction(ActionEvent actionEvent) {
     }
 
+    @FXML
     public void handleLogoutAction(ActionEvent actionEvent) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Logout");
