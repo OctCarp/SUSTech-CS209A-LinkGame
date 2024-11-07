@@ -1,7 +1,9 @@
 package io.github.octcarp.linkgame.client.controller;
 
 import io.github.octcarp.linkgame.client.net.PlayerManager;
+import io.github.octcarp.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
+import io.github.octcarp.linkgame.common.packet.SimpStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -19,7 +21,7 @@ public class MainMenuController {
 
     @FXML
     public void handleStartMatchAction(ActionEvent actionEvent) {
-        SceneSwitcher.getInstance().switchScene("match-board.fxml");
+        SceneSwitcher.getInstance().switchScene("match-board");
     }
 
     @FXML
@@ -35,8 +37,16 @@ public class MainMenuController {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 PlayerManager.getInstance().logout();
-                SceneSwitcher.getInstance().switchScene("login.fxml");
             }
         });
+    }
+
+    public void handleLogoutResult(SimpStatus status){
+        if (status != SimpStatus.OK) {
+            AlertPopper.popError("Logout",
+                    "Logout failed", "Please try again.");
+            return;
+        }
+        SceneSwitcher.getInstance().switchScene("login");
     }
 }

@@ -32,7 +32,7 @@
 
 ## Notes
 
-I suggest that you first complete the single-playerRecord mode. If you feel confident, you can directly reconstruct this project to include a two-playerRecord mode.
+I suggest that you first complete the single-player mode. If you feel confident, you can directly reconstruct this project to include a two-player mode.
 
 If you encounter any GUI issues while rendering multiple game boards, maybe you can check the $start$ method in the main entry point.
 

@@ -1,10 +1,15 @@
 package io.github.octcarp.linkgame.client.net;
 
-import io.github.octcarp.linkgame.common.module.PlayerRecord;
+import io.github.octcarp.linkgame.client.controller.LoginController;
+import io.github.octcarp.linkgame.client.controller.MainMenuController;
+import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
+import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.packet.*;
 
 public class PlayerManager {
     private static PlayerManager instance = null;
-    private PlayerRecord currentPlayer;
+    private Player currentPlayer;
+    private Player tempPlayer;
 
     private PlayerManager() {
     }
@@ -16,30 +21,58 @@ public class PlayerManager {
         return instance;
     }
 
-    private boolean playerCheckAndReg(PlayerRecord player) {
-        // Todo: send player info to server and check if the player is valid
-        return true;
+    public void playerRegister(Player player) {
+        Request request = new Request(RequestType.REGISTER);
+        request.setData(player);
+        ClientService.getInstance().sendRequest(request);
     }
 
-    public boolean playerLogin(String name, String passwd) {
-        PlayerRecord playerRecord = new PlayerRecord(name, passwd);
-        if (playerCheckAndReg(playerRecord)) {
-            setCurrentPlayer(playerRecord);
-            return true;
+    public void rePlayerRegister(SimpStatus status) {
+        LoginController controller = (LoginController)
+                SceneSwitcher.getInstance().getController("login");
+        controller.handleRegisterResult(status);
+    }
+
+    public void playerLogin(Player player) {
+        Request request = new Request("default", RequestType.LOGIN, player);
+        tempPlayer = player;
+        ClientService.getInstance().sendRequest(request);
+    }
+
+    public void rePlayerLogin(SimpStatus status) {
+        if (status == SimpStatus.OK) {
+            setCurrentPlayer(tempPlayer);
         }
-        return false;
+        LoginController controller = (LoginController)
+                SceneSwitcher.getInstance().getController("login");
+        controller.handleLoginResult(status);
     }
 
     public void logout() {
-        // TODO: send logout request to server
-        currentPlayer = null;
+        if (currentPlayer == null) {
+            return;
+        }
+
+        Request request = new Request(RequestType.LOGOUT);
+        request.setData(currentPlayer);
+        ClientService.getInstance().sendRequest(request);
     }
 
-    private void setCurrentPlayer(PlayerRecord player) {
+    public void reLogout(SimpStatus status) {
+        setCurrentPlayer(null);
+        if (status == SimpStatus.OK) {
+            setCurrentPlayer(null);
+        }
+        MainMenuController controller = (MainMenuController)
+                SceneSwitcher.getInstance().getController("main-menu");
+        controller.handleLogoutResult(status);
+    }
+
+    private void setCurrentPlayer(Player player) {
         currentPlayer = player;
     }
 
-    public PlayerRecord getCurrentPlayer() {
+    public Player getCurrentPlayer() {
         return currentPlayer;
     }
 }

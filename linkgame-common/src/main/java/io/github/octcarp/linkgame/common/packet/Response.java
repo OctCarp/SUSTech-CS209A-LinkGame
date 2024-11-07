@@ -3,18 +3,17 @@ package io.github.octcarp.linkgame.common.packet;
 import java.io.Serializable;
 
 public class Response implements Serializable {
-    private final String sender;
-    private final ResponseType type;
-    private final Object data;
+    private ResponseType type;
+    private Object data;
 
-    public Response(String sender, ResponseType type, Object data) {
-        this.sender = sender;
+    public Response(ResponseType type) {
         this.type = type;
-        this.data = data;
+        this.data = null;
     }
 
-    public String getSender() {
-        return sender;
+    public Response(ResponseType type, Object data) {
+        this.type = type;
+        this.data = data;
     }
 
     public ResponseType getType() {
@@ -23,5 +22,13 @@ public class Response implements Serializable {
 
     public Object getData() {
         return data;
+    }
+
+    public void setType(ResponseType type) {
+        this.type = type;
+    }
+
+    public void setData(Object data) {
+        this.data = data;
     }
 }

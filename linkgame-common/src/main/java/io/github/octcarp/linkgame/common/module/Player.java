@@ -1,7 +1,9 @@
 package io.github.octcarp.linkgame.common.module;
 
-public record PlayerRecord(String id, String password) {
-    public PlayerRecord {
+import java.io.Serializable;
+
+public record Player(String id, String password) implements Serializable {
+    public Player {
         if (id == null || id.isBlank()) {
             throw new IllegalArgumentException("id cannot be null or empty");
         }
@@ -18,8 +20,8 @@ public record PlayerRecord(String id, String password) {
         if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
-        PlayerRecord playerRecord = (PlayerRecord) obj;
-        return id.equals(playerRecord.id) && password.equals(playerRecord.password);
+        Player player = (Player) obj;
+        return id.equals(player.id) && password.equals(player.password);
     }
 
     @Override

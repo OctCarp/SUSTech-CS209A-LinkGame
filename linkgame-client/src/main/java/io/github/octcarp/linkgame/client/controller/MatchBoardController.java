@@ -21,42 +21,35 @@ import javafx.util.Duration;
 import java.util.List;
 
 public class MatchBoardController {
+    // Status banner
     @FXML
     private Label lblYourName;
-
     @FXML
     private Label lblYourScore;
-
     @FXML
     private Label lblOppName;
-
     @FXML
     private Label lblOppScore;
-
     @FXML
     private Label lblCurPlayer;
 
+    // Select board size
     @FXML
     public VBox vbSelectSize;
-
     @FXML
     public Label lblSelectBoardSize;
-
     @FXML
     private ChoiceBox<String> cbBoardSize;
-
     @FXML
     private Button btnConfirmSize;
 
+    // Game board
     @FXML
     private HBox vbBoard;
-
-    @FXML
-    private GridPane gpGameBoard;
-
     @FXML
     private Label lblSelectedPoints;
-
+    @FXML
+    private GridPane gpGameBoard;
     @FXML
     private Label lblJudgeResult;
 
@@ -195,7 +188,7 @@ public class MatchBoardController {
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
                 System.out.println("Exit Match");
-                SceneSwitcher.getInstance().switchScene("main-menu.fxml");
+                SceneSwitcher.getInstance().switchScene("main-menu");
             }
         });
 

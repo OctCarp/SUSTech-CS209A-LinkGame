@@ -1,48 +1,103 @@
 package io.github.octcarp.linkgame.client.controller;
 
 import io.github.octcarp.linkgame.client.net.PlayerManager;
+import io.github.octcarp.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
+import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.packet.SimpStatus;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 
+import java.io.ObjectInputFilter;
+
 public class LoginController {
+    @FXML
+    private TextField fieldLogId;
+    @FXML
+    private PasswordField fieldLogPasswd;
 
     @FXML
-    private TextField nameField;
-
+    private TextField fieldRegId;
     @FXML
-    private TextField passwdField;
+    private PasswordField fieldRegPasswd;
+    @FXML
+    private PasswordField fieldRegPasswdConfirm;
 
     @FXML
     public void initialize() {
-        nameField.setText("");
-        passwdField.setText("");
+        fieldLogId.setText("");
+        fieldLogPasswd.setText("");
     }
 
     @FXML
     public void handleLoginAction(ActionEvent actionEvent) {
-        String name = nameField.getText();
-        String passwd = passwdField.getText();
+        String name = fieldLogId.getText();
+        String passwd = fieldLogPasswd.getText();
         if (name.isEmpty() || passwd.isEmpty()) {
-            Alert alert = new Alert(Alert.AlertType.WARNING);
-            alert.setTitle("Login Warning");
-            alert.setHeaderText("Please fill in all fields");
-            alert.setContentText("ID and password cannot be empty");
-            alert.showAndWait();
+            AlertPopper.popWarning("Login", "Please fill in all fields",
+                    "ID and password cannot be empty");
+        }
+        PlayerManager.getInstance().playerLogin(new Player(name, passwd));
+    }
+
+    public void handleLoginResult(SimpStatus status) {
+        Platform.runLater(() -> {
+            if (status == SimpStatus.OK) {
+                SceneSwitcher.getInstance().switchScene("main-menu");
+            } else {
+                String type = "Login";
+                switch (status) {
+                    case UNAUTHORIZED -> AlertPopper.popError(type,
+                            "Password is wrong", "Please check your password");
+                    case NOT_FOUND -> AlertPopper.popError(type,
+                            "ID not found", "Please check your ID");
+                    case CONFLICT -> AlertPopper.popError(type,
+                            "Already logged in", "You are already logged in");
+                    default -> AlertPopper.popError(type,
+                            "Login failed", "Please try again");
+                }
+            }
+        });
+    }
+
+    @FXML
+    public void handleRegisterAction(ActionEvent actionEvent) {
+        String name = fieldRegId.getText();
+        String passwd = fieldRegPasswd.getText();
+        String passwdConfirm = fieldRegPasswdConfirm.getText();
+        if (name.isEmpty() || passwd.isEmpty() || passwdConfirm.isEmpty()) {
+            AlertPopper.popError("Register", "Please fill in all fields",
+                    "ID and password cannot be empty");
             return;
         }
 
-        boolean loginSuccess = PlayerManager.getInstance().playerLogin(name, passwd);
-        if (loginSuccess) {
-            SceneSwitcher.getInstance().switchScene("main-menu.fxml");
-        } else {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Login Error");
-            alert.setHeaderText("Login failed");
-            alert.setContentText("Please check your password, or ID already taken");
-            alert.showAndWait();
+        if (!passwd.equals(passwdConfirm)) {
+            AlertPopper.popWarning("Register", "Password not match",
+                    "Please confirm your password");
+            return;
         }
+        PlayerManager.getInstance().playerRegister(new Player(name, passwd));
+    }
+
+    public void handleRegisterResult(SimpStatus status){
+        Platform.runLater(() -> {
+            if (status == SimpStatus.OK) {
+                AlertPopper.popInfo("Register Success", "Your ID is '" + fieldRegId.getText() + "'",
+                        "You can try to login now");
+            } else {
+                switch (status) {
+                    case FORBIDDEN -> AlertPopper.popError("Register", "ID is reserved",
+                            "Please try another ID");
+                    case CONFLICT -> AlertPopper.popError("Register", "ID already exists",
+                            "Please try another ID");
+                    default -> AlertPopper.popError("Register", "Register failed",
+                            "Please try again");
+                }
+            }
+        });
     }
 }

@@ -1,5 +1,6 @@
 package io.github.octcarp.linkgame.client;
 
+import io.github.octcarp.linkgame.client.net.PlayerManager;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -10,7 +11,7 @@ import javafx.stage.Stage;
 
 import java.util.Objects;
 
-public class GameApp extends Application {
+public class GameMain extends Application {
 
     public static void main(String[] args) {
         launch(args);
@@ -27,13 +28,13 @@ public class GameApp extends Application {
 
         // show login scene finally
         SceneSwitcher.getInstance().setPrimaryStage(primaryStage);
-        SceneSwitcher.getInstance().switchScene("login.fxml");  // Default login scene
+        SceneSwitcher.getInstance().switchScene("login");  // Default login scene
         primaryStage.show();
     }
 
     private void initPrimaryStage(Stage primaryStage) {
         // set window title & icon
-        primaryStage.getIcons().add(new Image(Objects.requireNonNull(GameApp.class.getResource(
+        primaryStage.getIcons().add(new Image(Objects.requireNonNull(GameMain.class.getResource(
                 "/img/main_icon.png")).toExternalForm()));
         primaryStage.setTitle("CS209A Linking Game");
 
@@ -53,6 +54,7 @@ public class GameApp extends Application {
     }
 
     private void MyExit() {
+        PlayerManager.getInstance().logout();
         Platform.exit();
     }
 }

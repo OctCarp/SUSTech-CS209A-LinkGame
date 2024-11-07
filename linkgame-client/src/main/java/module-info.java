@@ -5,6 +5,10 @@ module linkgame.client {
 
     opens io.github.octcarp.linkgame.client to javafx.fxml;
     exports io.github.octcarp.linkgame.client;
-    exports io.github.octcarp.linkgame.client.controller;
+
     opens io.github.octcarp.linkgame.client.controller to javafx.fxml;
+    exports io.github.octcarp.linkgame.client.controller;
+
+    opens io.github.octcarp.linkgame.client.net to javafx.fxml;
+    exports io.github.octcarp.linkgame.client.net;
 }
