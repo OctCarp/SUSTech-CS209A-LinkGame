@@ -1,6 +1,6 @@
 package io.github.octcarp.linkgame.client;
 
-import io.github.octcarp.linkgame.client.net.PlayerManager;
+import io.github.octcarp.linkgame.client.net.LoginData;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
 import javafx.application.Application;
 import javafx.application.Platform;
@@ -54,7 +54,7 @@ public class GameMain extends Application {
     }
 
     private void MyExit() {
-        PlayerManager.getInstance().logout();
         Platform.exit();
+        LoginData.getInstance().logout();
     }
 }

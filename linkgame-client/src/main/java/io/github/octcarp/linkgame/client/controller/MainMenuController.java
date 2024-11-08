@@ -1,6 +1,7 @@
 package io.github.octcarp.linkgame.client.controller;
 
-import io.github.octcarp.linkgame.client.net.PlayerManager;
+import io.github.octcarp.linkgame.client.net.LobbyData;
+import io.github.octcarp.linkgame.client.net.LoginData;
 import io.github.octcarp.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
 import io.github.octcarp.linkgame.common.packet.SimpStatus;
@@ -10,18 +11,21 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
 
+import static java.lang.Thread.sleep;
+
 public class MainMenuController {
     @FXML
     private Label lblPlayerId;
 
     @FXML
     public void initialize() {
-        lblPlayerId.setText(PlayerManager.getInstance().getCurrentPlayer().id());
+        lblPlayerId.setText(LoginData.getInstance().getCurrentPlayer().id());
     }
 
     @FXML
     public void handleStartMatchAction(ActionEvent actionEvent) {
-        SceneSwitcher.getInstance().switchScene("match-board");
+        SceneSwitcher.getInstance().switchScene("lobby");
+        LobbyData.getInstance().enterLobby();
     }
 
     @FXML
@@ -36,12 +40,12 @@ public class MainMenuController {
         alert.setContentText("You will be redirected to the login page.");
         alert.showAndWait().ifPresent(response -> {
             if (response == ButtonType.OK) {
-                PlayerManager.getInstance().logout();
+                LoginData.getInstance().logout();
             }
         });
     }
 
-    public void handleLogoutResult(SimpStatus status){
+    public void handleLogoutResult(SimpStatus status) {
         if (status != SimpStatus.OK) {
             AlertPopper.popError("Logout",
                     "Logout failed", "Please try again.");

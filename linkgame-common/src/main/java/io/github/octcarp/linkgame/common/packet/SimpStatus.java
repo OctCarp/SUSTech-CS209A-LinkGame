@@ -1,6 +1,8 @@
 package io.github.octcarp.linkgame.common.packet;
 
-public enum SimpStatus {
+import java.io.Serializable;
+
+public enum SimpStatus implements Serializable {
     OK(200, "Request succeeded"),
     FAILURE(500, "Internal server error"),
     TIMEOUT(408, "Request timeout"),
@@ -11,8 +13,8 @@ public enum SimpStatus {
     LOCKED(423, "Resource Locked"),
     ;
 
-    private int code;
-    private String message;
+    private final int code;
+    private final String message;
 
     SimpStatus(int code, String message) {
         this.code = code;

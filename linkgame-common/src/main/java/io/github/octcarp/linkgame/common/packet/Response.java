@@ -1,5 +1,7 @@
 package io.github.octcarp.linkgame.common.packet;
 
+import io.github.octcarp.linkgame.common.module.Match;
+
 import java.io.Serializable;
 
 public class Response implements Serializable {

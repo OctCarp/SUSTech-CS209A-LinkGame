@@ -13,6 +13,18 @@ public class Request implements Serializable {
         this.data = null;
     }
 
+    public Request(String sender, RequestType type) {
+        this.sender = sender;
+        this.type = type;
+        this.data = null;
+    }
+
+    public Request(RequestType type, Object data) {
+        this.sender = null;
+        this.type = type;
+        this.data = data;
+    }
+
     public Request(String sender, RequestType type, Object data) {
         this.sender = sender;
         this.type = type;

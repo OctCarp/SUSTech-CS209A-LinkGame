@@ -1,14 +1,14 @@
 package io.github.octcarp.linkgame.client.net;
 
-import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
+import io.github.octcarp.linkgame.common.module.Game;
+import io.github.octcarp.linkgame.common.module.Match;
 import io.github.octcarp.linkgame.common.packet.Response;
 import io.github.octcarp.linkgame.common.packet.SimpStatus;
 
 import java.io.IOException;
-import java.io.ObjectInputFilter;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
+import java.util.List;
 
 public class ServerHandlerThread implements Runnable {
     private final Socket socket;
@@ -35,15 +35,35 @@ public class ServerHandlerThread implements Runnable {
                 switch (response.getType()) {
                     case LOGIN_RESULT -> {
                         SimpStatus status = (SimpStatus) response.getData();
-                        PlayerManager.getInstance().rePlayerLogin(status);
+                        LoginData.getInstance().rePlayerLogin(status);
                     }
                     case REGISTER_RESULT -> {
                         SimpStatus status = (SimpStatus) response.getData();
-                        PlayerManager.getInstance().rePlayerRegister(status);
+                        LoginData.getInstance().rePlayerRegister(status);
                     }
                     case LOGOUT_RESULT -> {
                         SimpStatus status = (SimpStatus) response.getData();
-                        PlayerManager.getInstance().reLogout(status);
+                        LoginData.getInstance().reLogout(status);
+                    }
+                    case ALL_WAITING_PLAYERS -> {
+                        List<String> players = (List<String>) response.getData();
+                        LobbyData.getInstance().reAllWaitingPlayers(players);
+                    }
+                    case START_MATCH -> {
+                        Match match = (Match) response.getData();
+                        MatchData.getInstance().reStartMatch(match);
+                    }
+                    case SYNC_MATCH -> {
+                        Match match = (Match) response.getData();
+                        MatchData.getInstance().reSyncMatch(match);
+                    }
+                    case SYNC_BOARD -> {
+                        Game game = (Game) response.getData();
+                        MatchData.getInstance().reSyncBoard(game);
+                    }
+                    case MATCH_FINISHED -> {
+                        Match match = (Match) response.getData();
+                        MatchData.getInstance().reMatchFinished(match);
                     }
                 }
             }
@@ -52,6 +72,8 @@ public class ServerHandlerThread implements Runnable {
             throw new RuntimeException(e);
         } catch (ClassNotFoundException | ClassCastException e) {
             throw new RuntimeException(e);
+        } finally {
+            ClientService.getInstance().disconnect();
         }
     }
 }

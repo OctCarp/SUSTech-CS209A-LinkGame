@@ -1,10 +1,13 @@
 package io.github.octcarp.linkgame.client.controller;
 
-import io.github.octcarp.linkgame.client.net.MatchManager;
+import io.github.octcarp.linkgame.client.net.ClientService;
+import io.github.octcarp.linkgame.client.net.MatchData;
 import io.github.octcarp.linkgame.client.utils.ImageLoader;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
 import io.github.octcarp.linkgame.common.module.Game;
 import io.github.octcarp.linkgame.common.module.GridPos;
+import io.github.octcarp.linkgame.common.module.Match;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.animation.KeyFrame;
@@ -18,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.util.Duration;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MatchBoardController {
@@ -35,9 +39,9 @@ public class MatchBoardController {
 
     // Select board size
     @FXML
-    public VBox vbSelectSize;
+    private VBox vbSelectSize;
     @FXML
-    public Label lblSelectBoardSize;
+    private Label lblSelectBoardSize;
     @FXML
     private ChoiceBox<String> cbBoardSize;
     @FXML
@@ -53,23 +57,27 @@ public class MatchBoardController {
     @FXML
     private Label lblJudgeResult;
 
-    public static Game game;
+    @FXML
+    private Button btnShuffle;
 
-    int[] position = new int[3];
+    private Match match;
+
+    private final int[] position = new int[3];
+
+    private String myId;
+
+    private boolean finished = false;
 
     @FXML
     public void initialize() {
-        MatchManager.getInstance().startMatch();
-        updateStatus();
+        myId = ClientService.getInstance().getMyId();
         vbBoard.setVisible(false);
     }
 
-    private void updateStatus() {
-        lblYourName.setText("Player 1");
-        lblYourScore.setText("0");
-        lblOppName.setText("Player 2");
-        lblOppScore.setText("0");
-        if (MatchManager.getInstance().getSelectBoardSize()) {
+    public void initMatch(Match match) {
+        this.match = match;
+        boolean select = match.getWhoChoseSize().equals(myId);
+        if (select) {
             lblSelectBoardSize.setText("Please select the board size");
         } else {
             lblSelectBoardSize.setText("Wait For your opponent to select the board size");
@@ -86,18 +94,21 @@ public class MatchBoardController {
         }
         int row = Integer.parseInt(size.split("×")[0]);
         int col = Integer.parseInt(size.split("×")[1]);
-        int[][] board = Game.setupBoard(row, col);
+
+        MatchData.getInstance().initBoard(new GridPos(row, col));
 
         vbSelectSize.setVisible(false);
         vbSelectSize.setManaged(false);
-
-        vbBoard.setVisible(true);
-        game = new Game(board);
-        paintGameBoard();
+//
+//        vbBoard.setVisible(true);
+//        game = new Game(board);
+//        paintGameBoard(true);
     }
 
-    public void paintGameBoard() {
+    public void paintGameBoard(boolean enableE) {
+        boolean enable = enableE && match.getCurTurn().equals(myId);
         gpGameBoard.getChildren().clear();
+        Game game = match.getGame();
         int[][] board = game.getBoard();
         for (int row = 0; row < game.getRow(); row++) {
             for (int col = 0; col < game.getCol(); col++) {
@@ -116,6 +127,7 @@ public class MatchBoardController {
                 Button button = new Button();
                 button.setPrefSize(40, 40);
                 button.setGraphic(imageView);
+                button.setDisable(!enable);
                 int finalRow = row;
                 int finalCol = col;
                 button.setOnAction(_ -> handleButtonPress(finalRow, finalCol));
@@ -136,62 +148,119 @@ public class MatchBoardController {
             String selectedPoints = lblSelectedPoints.getText();
             lblSelectedPoints.setText(selectedPoints + " -> (" + row + "," + col + ")");
 
-            List<GridPos> path = game.judge(position[1], position[2], row, col);
-            if (path != null) {
-                path.addFirst(new GridPos(position[1], position[2]));
-                path.addLast(new GridPos(row, col));
-                if (path.size() > 2) {
-                    for (int i = 1; i < path.size() - 1; i++) {
-                        GridPos current = path.get(i);
-                        Image dirImage = ImageLoader.getDirectImgByPos(path.get(i - 1), path.get(i), path.get(i + 1));
-                        ImageView imageView = new ImageView(dirImage);
-                        imageView.setFitHeight(40);
-                        imageView.setFitWidth(40);
-                        gpGameBoard.add(imageView, current.col(), current.row());
-                    }
-                    Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> {
-                        game.clearGrids(position[1], position[2], row, col);
-                        paintGameBoard();
-                    }));
-                    timeline.setCycleCount(1);
-                    timeline.play();
-                } else {
-                    game.clearGrids(position[1], position[2], row, col);
-                    paintGameBoard();
-                }
-            }
-            if (path != null) {
-                if (game.gameFinished()) {
-                    lblJudgeResult.setText("Game Finished!");
-                    MatchManager.getInstance().afterGameFinished();
-                } else {
-                    lblJudgeResult.setText("Bingo!");
-                }
-            } else {
-                lblJudgeResult.setText("No below 3 link found");
-            }
+            List<GridPos> move = new ArrayList<>();
+            move.add(new GridPos(position[1], position[2]));
+            move.add(new GridPos(row, col));
+
+            MatchData.getInstance().sendMove(move);
         }
     }
 
     @FXML
     private void handleShuffle() {
-        game.shuffleBoard();
-        paintGameBoard();
+        MatchData.getInstance().shuffleBoard();
     }
 
     @FXML
     public void handleExit(ActionEvent actionEvent) {
-        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-        alert.setTitle("Exit Match");
-        alert.setHeaderText("Are you sure you want to exit the match?");
-        alert.setContentText("All progress will be lost.");
-        alert.showAndWait().ifPresent(response -> {
-            if (response == ButtonType.OK) {
-                System.out.println("Exit Match");
-                SceneSwitcher.getInstance().switchScene("main-menu");
-            }
-        });
+        if (!finished) {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Exit Match");
+            alert.setHeaderText("Are you sure you want to exit the match?");
+            alert.setContentText("All progress will be lost.");
+            alert.showAndWait().ifPresent(response -> {
+                if (response == ButtonType.OK) {
+                    SceneSwitcher.getInstance().switchScene("main-menu");
+                }
+            });
+        } else {
+            SceneSwitcher.getInstance().switchScene("main-menu");
+        }
+    }
 
+    public void updateMatchByData(Match match) {
+        this.match = match;
+        vbSelectSize.setVisible(false);
+        vbSelectSize.setManaged(false);
+        Platform.runLater(this::updateMatch);
+    }
+
+    public void updateBoard(Game game) {
+        this.match.getGame().setBoard(game.getBoard());
+        Platform.runLater(() -> paintGameBoard(true));
+    }
+
+    private void updateMatch() {
+        if (myId.equals(match.getP1())) {
+            lblYourName.setText(match.getP1());
+            lblOppName.setText(match.getP2());
+            lblYourScore.setText(String.valueOf(match.getP1Score()));
+            lblOppScore.setText(String.valueOf(match.getP2Score()));
+        } else {
+            lblYourName.setText(match.getP2());
+            lblOppName.setText(match.getP1());
+            lblYourScore.setText(String.valueOf(match.getP2Score()));
+            lblOppScore.setText(String.valueOf(match.getP1Score()));
+        }
+
+        boolean myTurn = match.getCurTurn().equals(myId);
+        paintGameBoard(true);
+        lblCurPlayer.setText(myTurn ? "Your Turn" : "Opponent's Turn");
+        List<GridPos> lastPath = match.getLastPath();
+        if (lastPath != null) {
+            if (lastPath.size() >= 2) {
+                paintPath(lastPath);
+                lblJudgeResult.setText(myTurn ? "Opponent's Right" : "Bingo!");
+            } else {
+                lblJudgeResult.setText(myTurn ? "Opponent's Wrong" : "No below 3 link found");
+            }
+        }
+    }
+
+    private void paintPath(List<GridPos> path) {
+        Game game = match.getGame();
+        GridPos start = path.getFirst();
+        GridPos end = path.getLast();
+        if (path.size() > 2) {
+            for (int i = 1; i < path.size() - 1; i++) {
+                GridPos current = path.get(i);
+                Image dirImage = ImageLoader.getDirectImgByPos(path.get(i - 1), path.get(i), path.get(i + 1));
+                ImageView imageView = new ImageView(dirImage);
+                imageView.setFitHeight(40);
+                imageView.setFitWidth(40);
+                gpGameBoard.add(imageView, current.col(), current.row());
+            }
+            Timeline timeline = new Timeline(new KeyFrame(Duration.seconds(0.5), e -> {
+                game.clearGrids(start.row(), start.col(), end.row(), end.col());
+                paintGameBoard(true);
+            }));
+            timeline.setCycleCount(1);
+            timeline.play();
+        } else {
+            game.clearGrids(start.row(), start.col(), end.row(), end.col());
+            paintGameBoard(true);
+        }
+    }
+
+    public void matchFinished(Match match) {
+        this.match = match;
+        finished = true;
+        Platform.runLater(() -> {
+            paintGameBoard(false);
+            btnShuffle.setDisable(true);
+
+            int yourScore = Integer.parseInt(lblYourScore.getText());
+            int oppScore = Integer.parseInt(lblOppScore.getText());
+            if (yourScore > oppScore) {
+                lblJudgeResult.setText("You Win");
+            } else if (yourScore < oppScore) {
+                lblJudgeResult.setText("You Lose");
+            } else {
+                lblJudgeResult.setText("Draw");
+            }
+
+            lblCurPlayer.setText("Game Finished");
+        });
     }
 
 }

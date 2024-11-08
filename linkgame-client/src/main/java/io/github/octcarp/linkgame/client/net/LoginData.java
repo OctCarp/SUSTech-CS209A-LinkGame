@@ -6,18 +6,15 @@ import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
 import io.github.octcarp.linkgame.common.module.Player;
 import io.github.octcarp.linkgame.common.packet.*;
 
-public class PlayerManager {
-    private static PlayerManager instance = null;
-    private Player currentPlayer;
-    private Player tempPlayer;
+public class LoginData {
+    private static final LoginData instance = new LoginData();
 
-    private PlayerManager() {
+    private Player currentPlayer;
+
+    private LoginData() {
     }
 
-    public static PlayerManager getInstance() {
-        if (instance == null) {
-            instance = new PlayerManager();
-        }
+    public static LoginData getInstance() {
         return instance;
     }
 
@@ -34,14 +31,16 @@ public class PlayerManager {
     }
 
     public void playerLogin(Player player) {
-        Request request = new Request("default", RequestType.LOGIN, player);
-        tempPlayer = player;
+        Request request = new Request(RequestType.LOGIN, player);
+        setCurrentPlayer(player);
         ClientService.getInstance().sendRequest(request);
     }
 
     public void rePlayerLogin(SimpStatus status) {
         if (status == SimpStatus.OK) {
-            setCurrentPlayer(tempPlayer);
+            ClientService.getInstance().setMyId(currentPlayer.id());
+        } else {
+            setCurrentPlayer(null);
         }
         LoginController controller = (LoginController)
                 SceneSwitcher.getInstance().getController("login");

@@ -8,18 +8,17 @@ import io.github.octcarp.linkgame.server.utils.ServerConfig;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 public class PlayersManager {
-    private static PlayersManager instance = new PlayersManager();
+    private static final PlayersManager instance = new PlayersManager();
 
-    private CopyOnWriteArrayList<Player> playerList;
+    private final List<Player> playerList;
 
-    private Map<String, ClientHandlerThread> onlinePlayers;
+    private final Map<String, ClientHandlerThread> playerThreads;
 
     private PlayersManager() {
         playerList = FileIO.readPlayerList();
-        onlinePlayers = new ConcurrentHashMap<>();
+        playerThreads = new ConcurrentHashMap<>();
     }
 
     public static PlayersManager getInstance() {
@@ -27,22 +26,18 @@ public class PlayersManager {
     }
 
     public SimpStatus playerCanLogin(Player loginPlayer) {
-        if (!onlinePlayers.containsKey(loginPlayer.id())) {
-            for (Player player : playerList) {
-                if (player.id().equals(loginPlayer.id())) {
-                    return player.password().equals(loginPlayer.password()) ?
-                            SimpStatus.OK : SimpStatus.UNAUTHORIZED;
-                }
+        for (Player player : playerList) {
+            if (player.id().equals(loginPlayer.id())) {
+                return player.password().equals(loginPlayer.password()) ?
+                        SimpStatus.OK : SimpStatus.UNAUTHORIZED;
             }
-            return SimpStatus.NOT_FOUND;
-        } else {
-            return SimpStatus.CONFLICT;
         }
+        return SimpStatus.NOT_FOUND;
     }
 
     public SimpStatus playerLogout(String id) {
-        if (onlinePlayers.containsKey(id)) {
-            onlinePlayers.remove(id);
+        if (playerThreads.containsKey(id)) {
+            playerThreads.remove(id);
             removePlayerThread(id);
             return SimpStatus.OK;
         }
@@ -66,19 +61,19 @@ public class PlayersManager {
         return SimpStatus.OK;
     }
 
-    public List<Player> getPlayerList() {
-        return playerList;
-    }
-
     public ClientHandlerThread getPlayerThread(String id) {
-        return onlinePlayers.get(id);
+        return playerThreads.get(id);
     }
 
     public void addPlayerThread(String id, ClientHandlerThread thread) {
-        onlinePlayers.put(id, thread);
+        playerThreads.put(id, thread);
     }
 
     public void removePlayerThread(String id) {
-        onlinePlayers.remove(id);
+        playerThreads.remove(id);
+    }
+
+    public void playerDisconnect(String id) {
+        playerThreads.remove(id);
     }
 }

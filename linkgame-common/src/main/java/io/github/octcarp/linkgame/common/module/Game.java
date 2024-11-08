@@ -9,18 +9,36 @@ public class Game implements Serializable {
     private static final int GRID_TYPE_NUM = 12;
 
     // row length
-    private final int row;
+    private int row;
 
     // col length
-    private final int col;
+    private int col;
 
     // board content
-    int[][] board;
+    private int[][] board;
+
+    public Game() {
+        board = new int[6][6];
+    }
+
+    public Game(int row, int col) {
+        this.row = row;
+        this.col = col;
+        this.board = setupBoard(row, col);
+    }
 
     public Game(int[][] board) {
         this.board = board;
         this.row = board.length;
         this.col = board[0].length;
+    }
+
+    public Game copy() {
+        int[][] newBoard = new int[row][col];
+        for (int i = 0; i < row; i++) {
+            System.arraycopy(board[i], 0, newBoard[i], 0, col);
+        }
+        return new Game(newBoard);
     }
 
     // randomly initialize the game board
@@ -57,6 +75,7 @@ public class Game implements Serializable {
                 board[i][j] = pieces.get(index++);
             }
         }
+
         return board;
     }
 
@@ -227,5 +246,11 @@ public class Game implements Serializable {
 
     public int[][] getBoard() {
         return board;
+    }
+
+    public void setBoard(int[][] board) {
+        this.row = board.length;
+        this.col = board[0].length;
+        this.board = board;
     }
 }

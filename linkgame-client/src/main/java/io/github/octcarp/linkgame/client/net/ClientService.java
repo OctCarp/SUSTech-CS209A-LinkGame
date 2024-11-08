@@ -2,11 +2,8 @@ package io.github.octcarp.linkgame.client.net;
 
 import io.github.octcarp.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.linkgame.client.utils.ClientConfig;
-import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
-import io.github.octcarp.linkgame.common.module.Player;
 import io.github.octcarp.linkgame.common.packet.Request;
 import io.github.octcarp.linkgame.common.packet.RequestType;
-import io.github.octcarp.linkgame.common.packet.Response;
 import javafx.scene.control.Alert;
 
 import java.io.IOException;
@@ -20,9 +17,9 @@ public class ClientService {
     private final Socket socket;
     private final ObjectInputStream ois;
     private final ObjectOutputStream oos;
-    private ServerHandlerThread listener;
+    private final ServerHandlerThread listener;
 
-    private Player currentPlayer;
+    private String myId = null;
 
     private static ClientService instance = null;
 
@@ -55,7 +52,7 @@ public class ClientService {
         return instance;
     }
 
-    public void disconnect() throws IOException {
+    public void disconnect(){
         try {
             oos.writeObject(new Request(RequestType.LOGOUT));
             ois.close();
@@ -69,7 +66,7 @@ public class ClientService {
     public void sendRequest(Request request) {
         try {
             if (request.getSender() == null) {
-                request.setSender(currentPlayer == null ? "default" : currentPlayer.id());
+                request.setSender(myId == null ? "default" : myId);
             }
             oos.writeObject(request);
             oos.flush();
@@ -77,5 +74,13 @@ public class ClientService {
             AlertPopper.popNetErrAndExit();
             throw new RuntimeException(e);
         }
+    }
+
+    public void setMyId(String myId) {
+        this.myId = myId;
+    }
+
+    public String getMyId() {
+        return myId;
     }
 }

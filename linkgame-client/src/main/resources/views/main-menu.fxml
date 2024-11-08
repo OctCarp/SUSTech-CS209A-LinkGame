@@ -85,7 +85,7 @@
                   <Insets />
                </opaqueInsets>
             </HBox>
-            <Label alignment="CENTER" prefHeight="40.0" prefWidth="460.0" text="© 2024 Chunhui XU. " textAlignment="CENTER">
+            <Label alignment="CENTER" prefHeight="40.0" prefWidth="460.0" text="© SUSTech CS209A 2024 Fall Assignment 2" textAlignment="CENTER">
                <VBox.margin>
                   <Insets top="10.0" />
                </VBox.margin>

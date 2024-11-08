@@ -175,7 +175,7 @@
    </VBox>
 
     <HBox alignment="CENTER" spacing="10">
-        <Button onAction="#handleShuffle" style="-fx-background-color: #2E3238;" text="Shuffle Board" textFill="WHITE">
+        <Button fx:id="btnShuffle" onAction="#handleShuffle" style="-fx-background-color: #2E3238;" text="Shuffle Board" textFill="WHITE">
             <font>
                 <Font size="25.0" />
             </font>

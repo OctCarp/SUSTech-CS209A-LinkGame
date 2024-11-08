@@ -1,6 +1,6 @@
 package io.github.octcarp.linkgame.client.controller;
 
-import io.github.octcarp.linkgame.client.net.PlayerManager;
+import io.github.octcarp.linkgame.client.net.LoginData;
 import io.github.octcarp.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
 import io.github.octcarp.linkgame.common.module.Player;
@@ -8,11 +8,8 @@ import io.github.octcarp.linkgame.common.packet.SimpStatus;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Alert;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
-
-import java.io.ObjectInputFilter;
 
 public class LoginController {
     @FXML
@@ -41,7 +38,7 @@ public class LoginController {
             AlertPopper.popWarning("Login", "Please fill in all fields",
                     "ID and password cannot be empty");
         }
-        PlayerManager.getInstance().playerLogin(new Player(name, passwd));
+        LoginData.getInstance().playerLogin(new Player(name, passwd));
     }
 
     public void handleLoginResult(SimpStatus status) {
@@ -55,8 +52,6 @@ public class LoginController {
                             "Password is wrong", "Please check your password");
                     case NOT_FOUND -> AlertPopper.popError(type,
                             "ID not found", "Please check your ID");
-                    case CONFLICT -> AlertPopper.popError(type,
-                            "Already logged in", "You are already logged in");
                     default -> AlertPopper.popError(type,
                             "Login failed", "Please try again");
                 }
@@ -80,7 +75,7 @@ public class LoginController {
                     "Please confirm your password");
             return;
         }
-        PlayerManager.getInstance().playerRegister(new Player(name, passwd));
+        LoginData.getInstance().playerRegister(new Player(name, passwd));
     }
 
     public void handleRegisterResult(SimpStatus status){
