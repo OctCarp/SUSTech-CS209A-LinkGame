@@ -3,7 +3,7 @@ package io.github.octcarp.linkgame.client.net;
 import io.github.octcarp.linkgame.client.controller.LoginController;
 import io.github.octcarp.linkgame.client.controller.MainMenuController;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
-import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.model.Player;
 import io.github.octcarp.linkgame.common.packet.*;
 
 public class LoginData {

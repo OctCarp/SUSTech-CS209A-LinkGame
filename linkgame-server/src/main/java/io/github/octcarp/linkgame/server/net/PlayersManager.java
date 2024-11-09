@@ -1,6 +1,6 @@
 package io.github.octcarp.linkgame.server.net;
 
-import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.model.Player;
 import io.github.octcarp.linkgame.common.packet.SimpStatus;
 import io.github.octcarp.linkgame.server.utils.FileIO;
 import io.github.octcarp.linkgame.server.utils.ServerConfig;

@@ -1,7 +1,7 @@
 package io.github.octcarp.linkgame.client.utils;
 
 import io.github.octcarp.linkgame.client.controller.MatchBoardController;
-import io.github.octcarp.linkgame.common.module.GridPos;
+import io.github.octcarp.linkgame.common.model.GridPos;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 

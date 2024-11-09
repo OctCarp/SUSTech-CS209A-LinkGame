@@ -1,4 +1,4 @@
-package io.github.octcarp.linkgame.common.module;
+package io.github.octcarp.linkgame.common.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;

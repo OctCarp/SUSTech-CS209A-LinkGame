@@ -1,6 +1,6 @@
 package io.github.octcarp.linkgame.server.utils;
 
-import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.model.Player;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVPrinter;
@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FileIO {
-    //TODO: Save .csv persistently, instead of build refresh every time
 
     private final static URL csvFileURL
             = FileIO.class.getResource(ServerConfig.getPlayerRecordCsvPath());

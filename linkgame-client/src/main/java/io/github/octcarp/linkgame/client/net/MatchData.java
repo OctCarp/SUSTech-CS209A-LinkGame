@@ -2,10 +2,10 @@ package io.github.octcarp.linkgame.client.net;
 
 import io.github.octcarp.linkgame.client.controller.MatchBoardController;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
-import io.github.octcarp.linkgame.common.module.Game;
-import io.github.octcarp.linkgame.common.module.GridPos;
-import io.github.octcarp.linkgame.common.module.Match;
-import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.model.Game;
+import io.github.octcarp.linkgame.common.model.GridPos;
+import io.github.octcarp.linkgame.common.model.Match;
+import io.github.octcarp.linkgame.common.model.Player;
 import io.github.octcarp.linkgame.common.packet.Request;
 import io.github.octcarp.linkgame.common.packet.RequestType;
 import javafx.application.Platform;

@@ -1,7 +1,5 @@
 package io.github.octcarp.linkgame.server.utils;
 
-import io.github.octcarp.linkgame.server.ServerMain;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;

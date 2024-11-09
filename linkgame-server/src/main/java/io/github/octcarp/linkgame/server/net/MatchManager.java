@@ -1,8 +1,8 @@
 package io.github.octcarp.linkgame.server.net;
 
-import io.github.octcarp.linkgame.common.module.Game;
-import io.github.octcarp.linkgame.common.module.GridPos;
-import io.github.octcarp.linkgame.common.module.Match;
+import io.github.octcarp.linkgame.common.model.Game;
+import io.github.octcarp.linkgame.common.model.GridPos;
+import io.github.octcarp.linkgame.common.model.Match;
 import io.github.octcarp.linkgame.common.packet.Response;
 import io.github.octcarp.linkgame.common.packet.ResponseType;
 import io.github.octcarp.linkgame.server.model.MatchInfo;

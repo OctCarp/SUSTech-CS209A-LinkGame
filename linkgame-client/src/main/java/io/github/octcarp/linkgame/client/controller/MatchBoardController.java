@@ -4,9 +4,9 @@ import io.github.octcarp.linkgame.client.net.ClientService;
 import io.github.octcarp.linkgame.client.net.MatchData;
 import io.github.octcarp.linkgame.client.utils.ImageLoader;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
-import io.github.octcarp.linkgame.common.module.Game;
-import io.github.octcarp.linkgame.common.module.GridPos;
-import io.github.octcarp.linkgame.common.module.Match;
+import io.github.octcarp.linkgame.common.model.Game;
+import io.github.octcarp.linkgame.common.model.GridPos;
+import io.github.octcarp.linkgame.common.model.Match;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -99,10 +99,6 @@ public class MatchBoardController {
 
         vbSelectSize.setVisible(false);
         vbSelectSize.setManaged(false);
-//
-//        vbBoard.setVisible(true);
-//        game = new Game(board);
-//        paintGameBoard(true);
     }
 
     public void paintGameBoard(boolean enableE) {

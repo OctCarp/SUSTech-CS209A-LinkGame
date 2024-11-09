@@ -3,7 +3,7 @@ package io.github.octcarp.linkgame.client.controller;
 import io.github.octcarp.linkgame.client.net.LoginData;
 import io.github.octcarp.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.linkgame.client.utils.SceneSwitcher;
-import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.model.Player;
 import io.github.octcarp.linkgame.common.packet.SimpStatus;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;

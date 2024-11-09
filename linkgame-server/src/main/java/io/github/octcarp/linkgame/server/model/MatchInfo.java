@@ -1,7 +1,7 @@
 package io.github.octcarp.linkgame.server.model;
 
-import io.github.octcarp.linkgame.common.module.GridPos;
-import io.github.octcarp.linkgame.common.module.Match;
+import io.github.octcarp.linkgame.common.model.GridPos;
+import io.github.octcarp.linkgame.common.model.Match;
 import io.github.octcarp.linkgame.server.net.ClientHandlerThread;
 
 import java.io.Serializable;

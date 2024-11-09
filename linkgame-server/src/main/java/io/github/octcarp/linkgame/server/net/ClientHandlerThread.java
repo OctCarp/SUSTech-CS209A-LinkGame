@@ -1,7 +1,7 @@
 package io.github.octcarp.linkgame.server.net;
 
-import io.github.octcarp.linkgame.common.module.GridPos;
-import io.github.octcarp.linkgame.common.module.Player;
+import io.github.octcarp.linkgame.common.model.GridPos;
+import io.github.octcarp.linkgame.common.model.Player;
 import io.github.octcarp.linkgame.common.packet.*;
 
 import java.io.IOException;

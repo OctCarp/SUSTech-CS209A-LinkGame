@@ -12,8 +12,10 @@ import java.util.Map;
 
 public class SceneSwitcher {
 
-    private static SceneSwitcher instance = null;
+    private static SceneSwitcher instance = new SceneSwitcher();
+
     private Stage primaryStage;
+
     private final Map<String, Scene> scenes = new HashMap<>();
     private final Map<String, Object> controllers = new HashMap<>();
 
@@ -21,9 +23,6 @@ public class SceneSwitcher {
     }
 
     public static SceneSwitcher getInstance() {
-        if (instance == null) {
-            instance = new SceneSwitcher();
-        }
         return instance;
     }
 

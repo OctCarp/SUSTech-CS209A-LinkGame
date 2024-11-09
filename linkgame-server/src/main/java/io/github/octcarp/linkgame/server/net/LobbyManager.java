@@ -1,10 +1,8 @@
 package io.github.octcarp.linkgame.server.net;
 
-import io.github.octcarp.linkgame.common.module.Player;
 import io.github.octcarp.linkgame.common.packet.Response;
 import io.github.octcarp.linkgame.common.packet.ResponseType;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
