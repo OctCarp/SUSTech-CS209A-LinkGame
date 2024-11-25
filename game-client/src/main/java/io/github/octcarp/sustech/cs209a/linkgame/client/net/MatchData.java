@@ -49,7 +49,11 @@ public class MatchData {
 
     public void reConnectToMatch(Match match) {
         SceneSwitcher.getInstance().switchScene("match-board");
-        reSyncMatch(match);
+        Platform.runLater(() -> {
+                    reSyncMatch(match);
+                }
+        );
+
     }
 
     public void reSyncMatch(Match match) {

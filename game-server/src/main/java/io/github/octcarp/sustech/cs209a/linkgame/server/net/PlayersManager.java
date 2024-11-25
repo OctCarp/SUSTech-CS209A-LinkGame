@@ -61,6 +61,10 @@ public class PlayersManager {
         return SimpStatus.OK;
     }
 
+    public ClientHandlerThread getClientThreadByPlayerId(String id) {
+        return playerThreads.get(id);
+    }
+
     public void addPlayerThread(String id, ClientHandlerThread thread) {
         playerThreads.put(id, thread);
     }

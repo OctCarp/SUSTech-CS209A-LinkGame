@@ -3,6 +3,7 @@ package io.github.octcarp.sustech.cs209a.linkgame.server.net;
 import io.github.octcarp.sustech.cs209a.linkgame.common.model.Game;
 import io.github.octcarp.sustech.cs209a.linkgame.common.model.GridPos;
 import io.github.octcarp.sustech.cs209a.linkgame.common.model.Match;
+import io.github.octcarp.sustech.cs209a.linkgame.common.model.Player;
 import io.github.octcarp.sustech.cs209a.linkgame.common.packet.Response;
 import io.github.octcarp.sustech.cs209a.linkgame.common.packet.ResponseType;
 import io.github.octcarp.sustech.cs209a.linkgame.server.model.MatchInfo;
@@ -109,17 +110,27 @@ public class MatchManager {
             ClientHandlerThread oppThread = playerIndex == 1 ? matchInfo.getP2Thread() : matchInfo.getP1Thread();
 
             Match match = matchInfo.getMatch();
-            if (match.getStatus() == Match.MatchStatus.RUN) {
-                match.setStatus(playerIndex == 1 ? Match.MatchStatus.P1_DIS : Match.MatchStatus.P2_DIS);
-                Response response = new Response(ResponseType.SYNC_MATCH);
-                response.setData(match.copy());
-                oppThread.sendResponse(response);
+            switch (match.getStatus()) {
+                case RUN -> {
+                    match.setStatus(playerIndex == 1 ? Match.MatchStatus.P1_DIS : Match.MatchStatus.P2_DIS);
+                    Response response = new Response(ResponseType.SYNC_MATCH);
+                    response.setData(match.copy());
+                    oppThread.sendResponse(response);
+                }
+                case P1_DIS -> {
+                    if (playerIndex == 2) {
+                        matchInfo.setResult("All players disconnected");
+                        endMatch(matchInfo);
+                    }
+                }
+                case P2_DIS -> {
+                    if (playerIndex == 1) {
+                        matchInfo.setResult("All players disconnected");
+                        endMatch(matchInfo);
+                    }
+                }
             }
 
-            if (match.getStatus() == Match.MatchStatus.P1_DIS || match.getStatus() == Match.MatchStatus.P2_DIS) {
-                matchInfo.setResult("All players disconnected");
-                endMatch(matchInfo);
-            }
         }
     }
 
@@ -165,9 +176,11 @@ public class MatchManager {
         response_to_opp.setData(match.copy());
 
         if (match.getP1().equals(playerId)) {
+            matchInfo.setP1Thread(PlayersManager.getInstance().getClientThreadByPlayerId(playerId));
             matchInfo.getP1Thread().sendResponse(response_to_reconnect);
             matchInfo.getP2Thread().sendResponse(response_to_opp);
         } else {
+            matchInfo.setP2Thread(PlayersManager.getInstance().getClientThreadByPlayerId(playerId));
             matchInfo.getP2Thread().sendResponse(response_to_reconnect);
             matchInfo.getP1Thread().sendResponse(response_to_opp);
         }

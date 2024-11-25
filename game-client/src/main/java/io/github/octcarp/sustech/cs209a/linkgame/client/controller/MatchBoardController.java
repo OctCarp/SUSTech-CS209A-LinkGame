@@ -188,13 +188,13 @@ public class MatchBoardController {
             vbSelectSize.setManaged(false);
             switch (match.getStatus()) {
                 case P1_DIS -> {
-                    lblJudgeResult.setText("Player 1 is disconnect");
+                    lblJudgeResult.setText(match.getP1() + " is disconnect");
                     vbBoard.setVisible(false);
                     btnShuffle.setDisable(true);
                     gpGameBoard.setVisible(false);
                 }
                 case P2_DIS -> {
-                    lblJudgeResult.setText("Player 2 is disconnect");
+                    lblJudgeResult.setText(match.getP2() + " is disconnect");
                     vbBoard.setVisible(false);
                     btnShuffle.setDisable(true);
                     gpGameBoard.setVisible(false);

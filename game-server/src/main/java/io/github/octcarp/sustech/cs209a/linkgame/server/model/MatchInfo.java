@@ -13,8 +13,8 @@ public class MatchInfo implements Serializable {
     private final String p1;
     private final String p2;
 
-    private final ClientHandlerThread p1Thread;
-    private final ClientHandlerThread p2Thread;
+    private ClientHandlerThread p1Thread;
+    private ClientHandlerThread p2Thread;
 
     private String result;
 
@@ -81,5 +81,13 @@ public class MatchInfo implements Serializable {
 
     public void setResult(String result) {
         this.result = result;
+    }
+
+    public void setP2Thread(ClientHandlerThread p2Thread) {
+        this.p2Thread = p2Thread;
+    }
+
+    public void setP1Thread(ClientHandlerThread p1Thread) {
+        this.p1Thread = p1Thread;
     }
 }

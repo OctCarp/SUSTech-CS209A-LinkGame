@@ -4,6 +4,12 @@ import javafx.application.Platform;
 import javafx.scene.control.Alert;
 
 public class AlertPopper {
+    private static boolean tryExit = false;
+
+    public static void setTryExit(boolean tryExit) {
+        AlertPopper.tryExit = tryExit;
+    }
+
     public static void popError(String type, String header, String content) {
         Platform.runLater(() -> {
             Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -35,7 +41,11 @@ public class AlertPopper {
     }
 
     public static void popNetErrAndExit() {
+        if (tryExit) {
+            return;
+        }
         Platform.runLater(() -> {
+
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Network Error");
             alert.setHeaderText("Network Error");
