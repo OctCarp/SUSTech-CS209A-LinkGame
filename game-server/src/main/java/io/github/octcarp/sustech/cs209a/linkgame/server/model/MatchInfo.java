@@ -16,6 +16,8 @@ public class MatchInfo implements Serializable {
     private final ClientHandlerThread p1Thread;
     private final ClientHandlerThread p2Thread;
 
+    private String result;
+
     public MatchInfo(Match match, String p1, String p2, ClientHandlerThread p1Thread, ClientHandlerThread p2Thread) {
         this.match = match;
         this.p1 = p1;
@@ -71,5 +73,13 @@ public class MatchInfo implements Serializable {
 
     public void setMatch(Match match) {
         this.match = match;
+    }
+
+    public String getResult() {
+        return result;
+    }
+
+    public void setResult(String result) {
+        this.result = result;
     }
 }

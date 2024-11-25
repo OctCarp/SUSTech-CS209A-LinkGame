@@ -78,8 +78,11 @@ public class LobbyManager {
         if (client == null || oppClient == null) {
             return;
         }
+        stopWaiting(playerId);
+        stopWaiting(oppId);
         MatchManager.getInstance().createMatch(playerId, oppId);
     }
+
 
     public void playerDisconnected(String playerId) {
         lobbyPlayerThreads.remove(playerId);

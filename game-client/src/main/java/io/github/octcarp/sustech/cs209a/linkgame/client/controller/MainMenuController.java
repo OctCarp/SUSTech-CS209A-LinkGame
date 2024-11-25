@@ -2,8 +2,12 @@ package io.github.octcarp.sustech.cs209a.linkgame.client.controller;
 
 import io.github.octcarp.sustech.cs209a.linkgame.client.net.LobbyData;
 import io.github.octcarp.sustech.cs209a.linkgame.client.net.LoginData;
+import io.github.octcarp.sustech.cs209a.linkgame.client.net.MatchData;
+import io.github.octcarp.sustech.cs209a.linkgame.client.net.RecordData;
 import io.github.octcarp.sustech.cs209a.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.sustech.cs209a.linkgame.client.utils.SceneSwitcher;
+import io.github.octcarp.sustech.cs209a.linkgame.common.packet.Request;
+import io.github.octcarp.sustech.cs209a.linkgame.common.packet.RequestType;
 import io.github.octcarp.sustech.cs209a.linkgame.common.packet.SimpStatus;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -29,6 +33,7 @@ public class MainMenuController {
 
     @FXML
     private void handleGameHistoryAction(ActionEvent actionEvent) {
+        SceneSwitcher.getInstance().switchScene("match-record");
     }
 
     @FXML
@@ -51,5 +56,9 @@ public class MainMenuController {
             return;
         }
         SceneSwitcher.getInstance().switchScene("login");
+    }
+
+    public void handleReconnectAction(ActionEvent actionEvent) {
+        LobbyData.getInstance().reconnectMatch();
     }
 }

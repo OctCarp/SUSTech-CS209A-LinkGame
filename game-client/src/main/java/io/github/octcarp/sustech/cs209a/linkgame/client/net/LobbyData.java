@@ -1,6 +1,7 @@
 package io.github.octcarp.sustech.cs209a.linkgame.client.net;
 
 import io.github.octcarp.sustech.cs209a.linkgame.client.controller.LobbyController;
+import io.github.octcarp.sustech.cs209a.linkgame.client.utils.AlertPopper;
 import io.github.octcarp.sustech.cs209a.linkgame.client.utils.SceneSwitcher;
 import io.github.octcarp.sustech.cs209a.linkgame.common.packet.Request;
 import io.github.octcarp.sustech.cs209a.linkgame.common.packet.RequestType;
@@ -41,6 +42,18 @@ public class LobbyData {
     public void stopWaiting() {
         Request request = new Request(RequestType.STOP_WAITING);
         ClientService.getInstance().sendRequest(request);
+    }
+
+    public void reconnectMatch() {
+        Request request = new Request(RequestType.RECONNECT_MATCH);
+        ClientService.getInstance().sendRequest(request);
+    }
+
+    public void reNoReconnect() {
+        Platform.runLater(() -> {
+            AlertPopper.popError("Reconnect", "Reconnect failed",
+                    "No match to reconnect");
+        });
     }
 
     public void reAllWaitingPlayers(List<String> players) {

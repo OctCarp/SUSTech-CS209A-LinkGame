@@ -25,7 +25,7 @@ public class MatchData {
         return instance;
     }
 
-    public void initBoard(GridPos size){
+    public void initBoard(GridPos size) {
         Request request = new Request(RequestType.SELECT_BOARD);
         request.setData(size);
         ClientService.getInstance().sendRequest(request);
@@ -45,6 +45,11 @@ public class MatchData {
             controller.initMatch(match);
         });
 
+    }
+
+    public void reConnectToMatch(Match match) {
+        SceneSwitcher.getInstance().switchScene("match-board");
+        reSyncMatch(match);
     }
 
     public void reSyncMatch(Match match) {

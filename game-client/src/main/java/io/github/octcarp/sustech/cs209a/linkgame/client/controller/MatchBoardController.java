@@ -76,6 +76,13 @@ public class MatchBoardController {
 
     public void initMatch(Match match) {
         this.match = match;
+        if (myId.equals(match.getP1())) {
+            lblYourName.setText(match.getP1());
+            lblOppName.setText(match.getP2());
+        } else {
+            lblYourName.setText(match.getP2());
+            lblOppName.setText(match.getP1());
+        }
         boolean select = match.getWhoChoseSize().equals(myId);
         if (select) {
             lblSelectBoardSize.setText("Please select the board size");
@@ -176,9 +183,30 @@ public class MatchBoardController {
 
     public void updateMatchByData(Match match) {
         this.match = match;
-        vbSelectSize.setVisible(false);
-        vbSelectSize.setManaged(false);
-        Platform.runLater(this::updateMatch);
+        Platform.runLater(() -> {
+            vbSelectSize.setVisible(false);
+            vbSelectSize.setManaged(false);
+            switch (match.getStatus()) {
+                case P1_DIS -> {
+                    lblJudgeResult.setText("Player 1 is disconnect");
+                    vbBoard.setVisible(false);
+                    btnShuffle.setDisable(true);
+                    gpGameBoard.setVisible(false);
+                }
+                case P2_DIS -> {
+                    lblJudgeResult.setText("Player 2 is disconnect");
+                    vbBoard.setVisible(false);
+                    btnShuffle.setDisable(true);
+                    gpGameBoard.setVisible(false);
+                }
+                case RUN -> {
+                    vbBoard.setVisible(true);
+                    gpGameBoard.setVisible(true);
+                    updateMatch();
+                }
+
+            }
+        });
     }
 
     public void updateBoard(Game game) {
@@ -187,30 +215,34 @@ public class MatchBoardController {
     }
 
     private void updateMatch() {
-        if (myId.equals(match.getP1())) {
-            lblYourName.setText(match.getP1());
-            lblOppName.setText(match.getP2());
-            lblYourScore.setText(String.valueOf(match.getP1Score()));
-            lblOppScore.setText(String.valueOf(match.getP2Score()));
-        } else {
-            lblYourName.setText(match.getP2());
-            lblOppName.setText(match.getP1());
-            lblYourScore.setText(String.valueOf(match.getP2Score()));
-            lblOppScore.setText(String.valueOf(match.getP1Score()));
-        }
+        Platform.runLater(
+                () -> {
+                    if (myId.equals(match.getP1())) {
+                        lblYourName.setText(match.getP1());
+                        lblOppName.setText(match.getP2());
+                        lblYourScore.setText(String.valueOf(match.getP1Score()));
+                        lblOppScore.setText(String.valueOf(match.getP2Score()));
+                    } else {
+                        lblYourName.setText(match.getP2());
+                        lblOppName.setText(match.getP1());
+                        lblYourScore.setText(String.valueOf(match.getP2Score()));
+                        lblOppScore.setText(String.valueOf(match.getP1Score()));
+                    }
 
-        boolean myTurn = match.getCurTurn().equals(myId);
-        paintGameBoard(true);
-        lblCurPlayer.setText(myTurn ? "Your Turn" : "Opponent's Turn");
-        List<GridPos> lastPath = match.getLastPath();
-        if (lastPath != null) {
-            if (lastPath.size() >= 2) {
-                paintPath(lastPath);
-                lblJudgeResult.setText(myTurn ? "Opponent's Right" : "Bingo!");
-            } else {
-                lblJudgeResult.setText(myTurn ? "Opponent's Wrong" : "No below 3 link found");
-            }
-        }
+                    boolean myTurn = match.getCurTurn().equals(myId);
+                    paintGameBoard(true);
+                    lblCurPlayer.setText(myTurn ? "Your Turn" : "Opponent's Turn");
+                    List<GridPos> lastPath = match.getLastPath();
+                    if (lastPath != null) {
+                        if (lastPath.size() >= 2) {
+                            paintPath(lastPath);
+                            lblJudgeResult.setText(myTurn ? "Opponent's Right" : "Bingo!");
+                        } else {
+                            lblJudgeResult.setText(myTurn ? "Opponent's Wrong" : "No below 3 link found");
+                        }
+                    }
+                }
+        );
     }
 
     private void paintPath(List<GridPos> path) {

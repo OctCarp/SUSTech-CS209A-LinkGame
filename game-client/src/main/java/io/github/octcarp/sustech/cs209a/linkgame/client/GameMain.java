@@ -1,7 +1,10 @@
 package io.github.octcarp.sustech.cs209a.linkgame.client;
 
+import io.github.octcarp.sustech.cs209a.linkgame.client.net.ClientService;
 import io.github.octcarp.sustech.cs209a.linkgame.client.net.LoginData;
 import io.github.octcarp.sustech.cs209a.linkgame.client.utils.SceneSwitcher;
+import io.github.octcarp.sustech.cs209a.linkgame.common.packet.Request;
+import io.github.octcarp.sustech.cs209a.linkgame.common.packet.RequestType;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
@@ -54,7 +57,10 @@ public class GameMain extends Application {
     }
 
     private void MyExit() {
+        Request request = new Request(RequestType.SHUTDOWN);
+        ClientService.getInstance().sendRequest(request);
+
         Platform.exit();
-        LoginData.getInstance().logout();
+        System.exit(0);
     }
 }

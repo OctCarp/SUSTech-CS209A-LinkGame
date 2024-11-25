@@ -54,12 +54,14 @@ public class ClientService {
 
     public void disconnect(){
         try {
-            oos.writeObject(new Request(RequestType.LOGOUT));
+            oos.writeObject(new Request(RequestType.DISCONNECT));
             ois.close();
             oos.close();
             socket.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        } finally {
+            AlertPopper.popNetErrAndExit();
         }
     }
 

@@ -10,9 +10,11 @@ public class ServerConfig {
     private static int serverPort;
     private static List<String> reservedIds = new ArrayList<>();
     private static String playerRecordCsvPath;
+    private static String matchRecordCsvPath;
     private static int maxClientNum = 10;
 
-    static{
+
+    static {
         try (InputStream input = ServerConfig.class.getClassLoader().getResourceAsStream("server_config.properties")) {
             if (input == null) {
                 System.out.println("Sorry, can not find 'server_config.properties'");
@@ -24,6 +26,7 @@ public class ServerConfig {
 
             serverPort = Integer.parseInt(prop.getProperty("server.port"));
             playerRecordCsvPath = prop.getProperty("player_record_csv_path");
+            matchRecordCsvPath = prop.getProperty("match_record_csv_path");
             maxClientNum = Integer.parseInt(prop.getProperty("max_client_num"));
 
             String reservedIdsStr = prop.getProperty("reserved.ids");
@@ -53,5 +56,9 @@ public class ServerConfig {
 
     public static int getMaxClientNum() {
         return maxClientNum;
+    }
+
+    public static String getMatchRecordCsvPath() {
+        return matchRecordCsvPath;
     }
 }

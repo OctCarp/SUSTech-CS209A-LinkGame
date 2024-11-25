@@ -17,7 +17,7 @@ public class PlayersManager {
     private final Map<String, ClientHandlerThread> playerThreads;
 
     private PlayersManager() {
-        playerList = FileIO.readPlayerList();
+        playerList = RecordManager.getInstance().getPlayerList();
         playerThreads = new ConcurrentHashMap<>();
     }
 
@@ -59,10 +59,6 @@ public class PlayersManager {
             return SimpStatus.FAILURE;
         }
         return SimpStatus.OK;
-    }
-
-    public ClientHandlerThread getPlayerThread(String id) {
-        return playerThreads.get(id);
     }
 
     public void addPlayerThread(String id, ClientHandlerThread thread) {

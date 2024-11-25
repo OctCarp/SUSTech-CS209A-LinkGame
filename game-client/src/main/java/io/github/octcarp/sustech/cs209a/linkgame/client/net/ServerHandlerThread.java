@@ -2,6 +2,7 @@ package io.github.octcarp.sustech.cs209a.linkgame.client.net;
 
 import io.github.octcarp.sustech.cs209a.linkgame.common.model.Game;
 import io.github.octcarp.sustech.cs209a.linkgame.common.model.Match;
+import io.github.octcarp.sustech.cs209a.linkgame.common.model.MatchRecord;
 import io.github.octcarp.sustech.cs209a.linkgame.common.packet.Response;
 import io.github.octcarp.sustech.cs209a.linkgame.common.packet.SimpStatus;
 
@@ -45,6 +46,10 @@ public class ServerHandlerThread implements Runnable {
                         SimpStatus status = (SimpStatus) response.getData();
                         LoginData.getInstance().reLogout(status);
                     }
+                    case GET_MATCH_RECORD_RESULT ->{
+                        List<MatchRecord> matches = (List<MatchRecord>) response.getData();
+                        RecordData.getInstance().reSyncRecord(matches);
+                    }
                     case ALL_WAITING_PLAYERS -> {
                         List<String> players = (List<String>) response.getData();
                         LobbyData.getInstance().reAllWaitingPlayers(players);
@@ -61,9 +66,16 @@ public class ServerHandlerThread implements Runnable {
                         Game game = (Game) response.getData();
                         MatchData.getInstance().reSyncBoard(game);
                     }
+                    case RECONNECT_SUCCESS -> {
+                        Match match = (Match) response.getData();
+                        MatchData.getInstance().reConnectToMatch(match);
+                    }
                     case MATCH_FINISHED -> {
                         Match match = (Match) response.getData();
                         MatchData.getInstance().reMatchFinished(match);
+                    }
+                    case NO_MATCH_TO_RECONNECT -> {
+                        LobbyData.getInstance().reNoReconnect();
                     }
                 }
             }

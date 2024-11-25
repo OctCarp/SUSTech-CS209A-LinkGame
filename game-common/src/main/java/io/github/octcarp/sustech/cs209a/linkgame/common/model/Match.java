@@ -20,14 +20,18 @@ public class Match implements Serializable {
 
     private Game game;
 
-    //    public enum MatchStatus {
-//        INIT,
-//        RUN,
-//        PAUSE,
-//        FINISHED
-//    }
-//
-//    private MatchStatus status;
+
+    public enum MatchStatus {
+        INIT,
+        RUN,
+        P1_DIS,
+        P2_DIS,
+        FINISHED
+    }
+
+    MatchStatus status;
+
+    //    private MatchStatus status;
     public Match() {
 
     }
@@ -57,8 +61,7 @@ public class Match implements Serializable {
         this.game = new Game(boardSize.col(), boardSize.row());
     }
 
-    public Match(String p1, String p2, int p1Score, int p2Score, String whoChoseSize,
-                 String curTurn, List<GridPos> lastPath, Game game) {
+    public Match(String p1, String p2, int p1Score, int p2Score, String whoChoseSize, String curTurn, List<GridPos> lastPath, MatchStatus status, Game copy) {
         this.p1 = p1;
         this.p2 = p2;
         this.p1Score = p1Score;
@@ -66,16 +69,17 @@ public class Match implements Serializable {
         this.whoChoseSize = whoChoseSize;
         this.curTurn = curTurn;
         this.lastPath = lastPath;
-        this.game = game;
+        this.status = status;
+        this.game = copy;
     }
 
     public Match copy() {
-        return new Match(p1, p2, p1Score, p2Score, whoChoseSize, curTurn, lastPath, game.copy());
+        return new Match(p1, p2, p1Score, p2Score, whoChoseSize, curTurn, lastPath, status, game.copy());
     }
 
     public void initGame(int row, int col) {
         this.game.setBoard(Game.setupBoard(row, col));
-//        status = MatchStatus.RUN;
+        status = MatchStatus.RUN;
     }
 
     public String getP1() {
@@ -132,5 +136,13 @@ public class Match implements Serializable {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public MatchStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(MatchStatus status) {
+        this.status = status;
     }
 }

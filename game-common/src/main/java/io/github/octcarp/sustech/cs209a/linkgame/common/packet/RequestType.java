@@ -13,12 +13,17 @@ public enum RequestType implements Serializable {
     START_WAITING,
     STOP_WAITING,
 
+    GET_MATCH_RECORD,
+
     JOIN_PLAYER,
+    RECONNECT_MATCH,
 
     SELECT_BOARD,
     EXIT_MATCH,
     SHUFFLE_BOARD,
 
     TURN_MOVE,
+
+    SHUTDOWN,
     ;
 }

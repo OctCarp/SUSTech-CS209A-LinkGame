@@ -48,6 +48,7 @@ public class MatchManager {
 
         Match finalMatch = match.copy();
         finalMatch.getGame().setBoard(match.getGame().getBoard());
+
         Response response = new Response(ResponseType.SYNC_MATCH);
         response.setData(finalMatch);
 
@@ -87,20 +88,46 @@ public class MatchManager {
         gameOverResponse.setData(finalMatch);
         matchInfo.getP1Thread().sendResponse(gameOverResponse);
         matchInfo.getP2Thread().sendResponse(gameOverResponse);
-        matches.remove(matchInfo.getP1());
-        matches.remove(matchInfo.getP2());
+
+        String matchResult;
+        if (finalMatch.getP1Score() > finalMatch.getP2Score()) {
+            matchResult = finalMatch.getP1() + " win";
+        } else if (finalMatch.getP1Score() < finalMatch.getP2Score()) {
+            matchResult = finalMatch.getP2() + " win";
+        } else {
+            matchResult = "Draw";
+        }
+        matchInfo.setResult(matchResult);
+
+        endMatch(matchInfo);
     }
 
     public void playerDisconnected(String playerId) {
         MatchInfo matchInfo = matches.get(playerId);
         if (matchInfo != null) {
-            ClientHandlerThread oppThread = matchInfo.getP1().equals(playerId) ?
-                    matchInfo.getP2Thread() : matchInfo.getP1Thread();
-            Response response = new Response(ResponseType.OPP_DISCONNECTED);
-            oppThread.sendResponse(response);
-            matches.remove(matchInfo.getP1());
-            matches.remove(matchInfo.getP2());
+            int playerIndex = matchInfo.getP1().equals(playerId) ? 1 : 2;
+            ClientHandlerThread oppThread = playerIndex == 1 ? matchInfo.getP2Thread() : matchInfo.getP1Thread();
+
+            Match match = matchInfo.getMatch();
+            if (match.getStatus() == Match.MatchStatus.RUN) {
+                match.setStatus(playerIndex == 1 ? Match.MatchStatus.P1_DIS : Match.MatchStatus.P2_DIS);
+                Response response = new Response(ResponseType.SYNC_MATCH);
+                response.setData(match.copy());
+                oppThread.sendResponse(response);
+            }
+
+            if (match.getStatus() == Match.MatchStatus.P1_DIS || match.getStatus() == Match.MatchStatus.P2_DIS) {
+                matchInfo.setResult("All players disconnected");
+                endMatch(matchInfo);
+            }
         }
+    }
+
+    private void endMatch(MatchInfo matchInfo) {
+        matches.remove(matchInfo.getP1());
+        matches.remove(matchInfo.getP2());
+
+        RecordManager.getInstance().addMatchRecordByInfo(matchInfo);
     }
 
     public void shuffleBoard(String playerId) {
@@ -119,6 +146,33 @@ public class MatchManager {
 
         matchInfo.getP1Thread().sendResponse(response);
         matchInfo.getP2Thread().sendResponse(response);
+    }
+
+    public boolean reconnectMatch(String playerId) {
+        MatchInfo matchInfo = matches.get(playerId);
+        if (matchInfo == null) {
+            return false;
+        }
+        Match match = matchInfo.getMatch();
+        if ((match.getStatus() == Match.MatchStatus.P1_DIS && match.getP1().equals(playerId)) ||
+                (match.getStatus() == Match.MatchStatus.P2_DIS && match.getP2().equals(playerId))) {
+            match.setStatus(Match.MatchStatus.RUN);
+        }
+
+        Response response_to_reconnect = new Response(ResponseType.RECONNECT_SUCCESS);
+        response_to_reconnect.setData(match.copy());
+        Response response_to_opp = new Response(ResponseType.SYNC_MATCH);
+        response_to_opp.setData(match.copy());
+
+        if (match.getP1().equals(playerId)) {
+            matchInfo.getP1Thread().sendResponse(response_to_reconnect);
+            matchInfo.getP2Thread().sendResponse(response_to_opp);
+        } else {
+            matchInfo.getP2Thread().sendResponse(response_to_reconnect);
+            matchInfo.getP1Thread().sendResponse(response_to_opp);
+        }
+
+        return true;
     }
 
 //    public void addMatch(Match match) {

@@ -10,6 +10,8 @@ public enum ResponseType implements Serializable {
     ALL_WAITING_PLAYERS,
     WAITING_OPPONENT,
 
+    GET_MATCH_RECORD_RESULT,
+
     START_MATCH,
     SYNC_MATCH,
     SYNC_BOARD,
@@ -17,6 +19,9 @@ public enum ResponseType implements Serializable {
 
     OPP_DISCONNECTED,
     OPP_RECONNECTED,
+
+    RECONNECT_SUCCESS,
+    NO_MATCH_TO_RECONNECT,
 
     ERROR_MESSAGE,
     ;
