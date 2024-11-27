@@ -107,8 +107,8 @@
                 <ChoiceBox fx:id="cbBoardSize" prefHeight="64.0" prefWidth="200.0" style="-fx-font-size: 25px">
                     <items>
                         <FXCollections fx:factory="observableArrayList">
+                            <String fx:value="4×4" />
                             <String fx:value="6×6" />
-                            <String fx:value="6×8" />
                             <String fx:value="8×8" />
                         </FXCollections>
                     </items>
