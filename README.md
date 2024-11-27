@@ -4,18 +4,27 @@
 
 SUSTech CS209A 2024 Fall Assignment 2.
 
-### Documentation
+### Versions
 
-- [requirement.pdf](docs/requirement.pdf)
-- [grading_criteria.xlsx](docs/grading_criteria.xlsx) or [grading_criteria_CHS.xlsx](grading_criteria_CHS.xlsx)
-
-I completed both the basic and bonus features.
+- Main branch (main): Kotlin implementation version
+- [Java implementation version](https://github.com/OctCarp/SUSTech-CS209A-LinkGame/tree/java-backup) (java-backup branch), you can check this for Java native implementation.
 
 ### About
 
 A toy game. I wrote it almost in one go, and by the end the project structure was a little messy. 
 
 There may be some minor bugs, witch I don't have the energy to fix :((
+
+After completing the Java version, I refactored the project into a Kotlin version with the help of IDE and LLM, to learn various syntax sugars of Kotlin.
+
+It is NOT a native Kotlin project, and does not use features such as `coroutines`.
+
+### Documentation
+
+- [requirement.pdf](docs/requirement.pdf)
+- [grading_criteria.xlsx](docs/grading_criteria.xlsx) or [grading_criteria_CHS.xlsx](grading_criteria_CHS.xlsx)
+
+I completed both the basic and bonus features.
 
 ### Modules
 
