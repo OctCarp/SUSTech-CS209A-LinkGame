@@ -1,43 +1,47 @@
 # SUSTech-CS209A-Linking-Game
 
-(JavaFX 23 + Java socket) Linking Game (a.k.a. “连连看”) using JavaFX 23 with simple online. 
+(JavaFX 23 + Java socket) A Linking Game (a.k.a. '连连看') with simple online multiplayer functionality.
 
 SUSTech CS209A 2024 Fall Assignment 2.
 
 ### Versions
 
-- Main branch (main): Kotlin implementation version
-- [Java implementation version](https://github.com/OctCarp/SUSTech-CS209A-LinkGame/tree/java-backup) (java-backup branch), you can check this for Java native implementation.
+- Main branch ( `main` ): Kotlin implementation version
+- [Java implementation version](https://github.com/OctCarp/SUSTech-CS209A-LinkGame/tree/java-backup) ( `java-backup` branch), you can check this for Java native implementation.
+
+For documentation, it is recommended to first refer to the `main` branch, as the documentation for the backup branch is no longer being updated, and there may be some minor errors in it.
 
 ### About
 
-A toy game. I wrote it almost in one go, and by the end the project structure was a little messy. 
+A toy game. I wrote it in a short time span, and by the end the project structure was a little messy. 
 
-There may be some minor bugs, witch I don't have the energy to fix :((
+There may be some minor bugs that have not been addressed. 
 
-After completing the Java version, I refactored the project into a Kotlin version with the help of IDE and LLM, to learn various syntax sugars of Kotlin.
+After completing the Java version, I refactored the project into Kotlin with the help of JetBrains Intellij IDEA and LLM, exploring Kotlin's syntactic sugar.
 
-It is NOT a native Kotlin project, and does not use features such as `coroutines`.
+Kotlin version may have more bugs (due to rewrites) or fewer bugs (as some issues from the Java version were addressed during refactoring).
+
+It is not a native Kotlin project, and does not use features such as `coroutines`.
 
 ### Documentation
 
 - [requirement.pdf](docs/requirement.pdf)
-- [grading_criteria.xlsx](docs/grading_criteria.xlsx) or [grading_criteria_CHS.xlsx](grading_criteria_CHS.xlsx)
+- [grading_criteria.xlsx](docs/grading_criteria.xlsx) or [grading_criteria_CHS.xlsx](docs/grading_criteria_CHS.xlsx)
 
 I completed both the basic and bonus features.
 
 ### Modules
 
-- [game-common](game-common/): common model for both client and server.
-    - controller: JavaFX `.fxml` file's controllers
-    - net: Singletons for managing a client's different kinds of data
+- [game-common](game-common/): Shared model components used by both the client and the server.
+    - `model` : Different models for C/S transmission through `ObjectI/OStream` .
+    - `packet` : General `Request` / `Response` model.
 
-- [game-client](game-client/): JavaFX game client application
-    - model: Different models for C/S transmission through `ObjectI/OStream`
-    - packet: General `Request` / `Response` model
+- [game-client](game-client/): JavaFX game client application.
+    - `controller` : Controllers for JavaFX `.fxml` files.
+    - `net` : Singletons for managing various types of client-side data.
 
-- [game-server](game-server/): Java socket game server
-    - net: Singletons for managing different kinds of data for all clients
+- [game-server](game-server/): Java socket game server.
+    - `net` : Singletons for managing different kinds of data for all clients.
 
 
 ### Login / Register

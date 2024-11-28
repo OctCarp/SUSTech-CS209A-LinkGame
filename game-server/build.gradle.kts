@@ -1,6 +1,8 @@
 plugins {
     id("java")
     kotlin("jvm")
+
+    application
 }
 
 group = "io.github.octcarp.sustech.cs209a.linkgame"
@@ -10,11 +12,15 @@ dependencies {
     implementation(project(":game-common"))
 
     implementation("org.apache.commons:commons-csv:1.12.0")
-    implementation(kotlin("stdlib-jdk8"))
+}
+
+application {
+    mainClass.set("io.github.octcarp.sustech.cs209a.linkgame.server.ServerMain")
+}
+
+kotlin {
+    jvmToolchain(22)
 }
 
 tasks.test {
-}
-kotlin {
-    jvmToolchain(22)
 }

@@ -16,7 +16,7 @@ class Game : Serializable {
     var board: Array<IntArray>
 
     constructor() {
-        board = Array<IntArray>(6) { IntArray(6) }
+        board = Array<IntArray>(0) { IntArray(0) }
     }
 
     constructor(row: Int, col: Int) {
@@ -31,7 +31,7 @@ class Game : Serializable {
         this.col = board[0].size
     }
 
-    fun copy(): Game {
+    fun deepCopy(): Game {
         val newBoard = board.map { it.copyOf() }.toTypedArray()
         return Game(newBoard)
     }

@@ -4,9 +4,9 @@ import java.io.Serializable
 import kotlin.random.Random
 
 class Match : Serializable {
-    var p1: String? = null
+    lateinit var p1: String
         private set
-    var p2: String? = null
+    lateinit var p2: String
         private set
 
     var p1Score: Int = 0
@@ -14,16 +14,15 @@ class Match : Serializable {
     var p2Score: Int = 0
         private set
 
-    var whoChoseSize: String? = null
+    lateinit var whoChoseSize: String
         private set
 
-    var curTurn: String? = null
+    lateinit var curTurn: String
         private set
 
     var lastPath: List<GridPos>? = null
 
-    var game: Game? = null
-        private set
+    lateinit var game: Game
 
 
     enum class MatchStatus {
@@ -36,7 +35,6 @@ class Match : Serializable {
 
     var status: MatchStatus = MatchStatus.INIT
 
-    //    private MatchStatus status;
     constructor()
 
     constructor(p1: String, p2: String) {
@@ -52,20 +50,8 @@ class Match : Serializable {
         this.status = MatchStatus.INIT;
     }
 
-    constructor(p1: String, p2: String, boardSize: GridPos) {
-        this.p1 = p1
-        this.p2 = p2
-        this.p1Score = 0
-        this.p2Score = 0
-        val choose = Random.nextInt(2) + 1
-        this.whoChoseSize = if (choose == 1) p1 else p2
-        this.curTurn = whoChoseSize
-        this.lastPath = null
-        this.game = Game(boardSize.col, boardSize.row)
-    }
-
     constructor(
-        p1: String?,
+        p1: String,
         p2: String,
         p1Score: Int,
         p2Score: Int,
@@ -73,7 +59,7 @@ class Match : Serializable {
         curTurn: String,
         lastPath: List<GridPos>?,
         status: MatchStatus,
-        copy: Game
+        game: Game
     ) {
         this.p1 = p1
         this.p2 = p2
@@ -83,15 +69,23 @@ class Match : Serializable {
         this.curTurn = curTurn
         this.lastPath = lastPath
         this.status = status
-        this.game = copy
+        this.game = game
     }
 
-    fun copy(): Match {
-        return Match(p1, p2!!, p1Score, p2Score, whoChoseSize!!, curTurn!!, lastPath, status, game!!.copy())
-    }
+    fun deepCopy() = Match(
+        p1 = p1.toString(),
+        p2 = p2.toString(),
+        p1Score = p1Score,
+        p2Score = p2Score,
+        whoChoseSize = whoChoseSize.toString(),
+        curTurn = curTurn.toString(),
+        lastPath = lastPath,
+        status = status,
+        game = game.deepCopy()
+    )
 
     fun initGame(row: Int, col: Int) {
-        this.game!!.board = Game.setupBoard(row, col)
+        this.game.board = Game.setupBoard(row, col)
         status = MatchStatus.RUN
     }
 

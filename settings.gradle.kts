@@ -1,4 +1,11 @@
 pluginManagement {
+    plugins {
+        // Apply the foojay-resolver plugin to allow automatic download of JDKs
+        id("org.gradle.toolchains.foojay-resolver-convention") version "0.8.0"
+
+        kotlin("jvm") version "2.1.0" apply false
+    }
+
     repositories {
         // Aliyun Maven Repository
         maven("https://maven.aliyun.com/repository/public")
@@ -9,17 +16,15 @@ pluginManagement {
         // Gradle plugins repository
         maven("https://plugins.gradle.org/m2/")
     }
-
-    plugins {
-        kotlin("jvm") version "2.0.21" apply false
-    }
 }
 
 rootProject.name = "linking-game"
 
-include("game-client")
-include("game-server")
-include("game-common")
+include(
+    "game-client",
+    "game-server",
+    "game-common"
+)
 
 dependencyResolutionManagement {
     repositories {

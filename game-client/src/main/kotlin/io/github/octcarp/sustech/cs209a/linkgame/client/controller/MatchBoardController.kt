@@ -198,7 +198,7 @@ class MatchBoardController {
         val enable = enableE && match!!.curTurn == myId
         gpGameBoard.children.clear()
         val game = match!!.game
-        val board: Array<IntArray> = game!!.board
+        val board: Array<IntArray> = game.board
         for (row in 0 until game.row) {
             for (col in 0 until game.col) {
                 val imageView = ImageLoader.addContent(board[row][col])!!
@@ -211,7 +211,6 @@ class MatchBoardController {
                 } else {
                     imageView.fitWidth = 30.0
                     imageView.fitHeight = 30.0
-                    gpGameBoard.add(imageView, col, row)
 
                     val button = Button().apply {
                         setPrefSize(40.0, 40.0)
@@ -229,7 +228,7 @@ class MatchBoardController {
     }
 
     fun updateBoard(game: Game) {
-        this.match!!.game!!.board = game.board
+        this.match!!.game.board = game.board
         Platform.runLater {
             paintGameBoard(true)
         }

@@ -30,8 +30,8 @@ object MatchManager {
             val match = matchInfo.match
             match.initGame(boardSize.row, boardSize.col)
 
-            val finalMatch = match.copy()
-            finalMatch.game!!.board = (match.game!!.board)
+            val finalMatch = match.deepCopy()
+            finalMatch.game.board = (match.game.board)
 
             Response(ResponseType.SYNC_MATCH).apply {
                 data = finalMatch
@@ -50,13 +50,13 @@ object MatchManager {
             matchInfo.judgeMoveAndUpdate(playerId, start, end)
 
             Response(ResponseType.SYNC_MATCH).apply {
-                data = matchInfo.match.copy()
+                data = matchInfo.match.deepCopy()
             }.also { sendResponseToBothPlayers(matchInfo, it) }
 
             with(matchInfo) {
                 match.lastPath?.takeIf { it.size >= 2 }?.let {
-                    match.game?.clearGrids(start.row, start.col, end.row, end.col)
-                    if (match.game?.gameFinished() == true) {
+                    match.game.clearGrids(start.row, start.col, end.row, end.col)
+                    if (match.game.gameFinished() == true) {
                         gameFinish(this)
                     }
                 }
@@ -65,7 +65,7 @@ object MatchManager {
     }
 
     private fun gameFinish(matchInfo: MatchInfo) {
-        val finalMatch = matchInfo.match.copy()
+        val finalMatch = matchInfo.match.deepCopy()
         Response(ResponseType.MATCH_FINISHED).apply {
             data = finalMatch
         }.also { sendResponseToBothPlayers(matchInfo, it) }
@@ -89,7 +89,7 @@ object MatchManager {
                     MatchStatus.RUN -> {
                         status = if (playerIndex == 1) MatchStatus.P1_DIS else MatchStatus.P2_DIS
 
-                        val finalMatch = this.copy()
+                        val finalMatch = this.deepCopy()
                         Response(ResponseType.SYNC_MATCH).apply {
                             data = finalMatch
                         }.also {
@@ -128,10 +128,10 @@ object MatchManager {
 
     fun shuffleBoard(playerId: String) {
         matches[playerId]?.takeIf { it.match.curTurn == playerId }?.let { matchInfo ->
-            matchInfo.match.game!!.shuffleBoard()
+            matchInfo.match.game.shuffleBoard()
 
             Response(ResponseType.SYNC_BOARD).apply {
-                data = matchInfo.match.game!!.copy()
+                data = matchInfo.match.game.deepCopy()
             }.also { sendResponseToBothPlayers(matchInfo, it) }
         }
     }
@@ -146,9 +146,9 @@ object MatchManager {
             }
 
             val toReconnect = Response(ResponseType.RECONNECT_SUCCESS)
-            toReconnect.data = match.copy()
+            toReconnect.data = match.deepCopy()
             val toOpp = Response(ResponseType.SYNC_MATCH)
-            toOpp.data = match.copy()
+            toOpp.data = match.deepCopy()
 
             if (match.p1 == playerId) {
                 matchInfo.p1Thread = PlayersManager.getClientThreadByPlayerId(playerId)!!

@@ -18,7 +18,6 @@ dependencies {
     testImplementation(platform("org.junit:junit-bom:$junitVersion"))
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-api")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine")
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 javafx {

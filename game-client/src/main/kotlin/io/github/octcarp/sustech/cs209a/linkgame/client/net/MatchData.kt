@@ -26,6 +26,7 @@ object MatchData {
     }
 
     fun reConnectToMatch(match: Match) {
+        this.match = match
         SceneSwitcher.switchScene("match-board")
         reSyncMatch(match)
     }
@@ -36,6 +37,7 @@ object MatchData {
     }
 
     fun reSyncBoard(game: Game) {
+        match?.game = game
         (SceneSwitcher.getController("match-board") as MatchBoardController).updateBoard(game)
     }
 

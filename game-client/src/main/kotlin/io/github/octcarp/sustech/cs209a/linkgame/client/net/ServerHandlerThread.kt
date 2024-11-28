@@ -11,7 +11,10 @@ import java.io.IOException
 import java.io.ObjectInputStream
 import java.net.Socket
 
-class ServerHandlerThread(private val socket: Socket, private val ois: ObjectInputStream) : Runnable {
+class ServerHandlerThread(
+    private val socket: Socket,
+    private val ois: ObjectInputStream
+) : Runnable {
     override fun run() {
         try {
             while (true) {
@@ -82,7 +85,7 @@ class ServerHandlerThread(private val socket: Socket, private val ois: ObjectInp
                 }
             }
         } catch (e: IOException) {
-            SceneSwitcher.netErrAndReturn();
+            SceneSwitcher.netErrAndReturn()
             throw RuntimeException(e)
         } catch (e: ClassNotFoundException) {
             throw RuntimeException(e)

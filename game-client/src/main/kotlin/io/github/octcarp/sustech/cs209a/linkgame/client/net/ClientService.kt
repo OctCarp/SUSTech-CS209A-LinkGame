@@ -28,11 +28,14 @@ object ClientService {
             listener = ServerHandlerThread(socket!!, ois!!)
             Thread(listener).start()
         }.onFailure { ex ->
-            when (ex) {
-                is IllegalArgumentException -> println("Configuration error: ${ex.message}")
-                is IllegalStateException -> println("File error: ${ex.message}")
-                is IOException -> println("Failed to connect to server: ${ex.message}")
-                else -> println("Failed to load configuration: ${ex.message}")
+            {
+                AlertPopper.popNetErrAndToLogin()
+                when (ex) {
+                    is IllegalArgumentException -> println("Configuration error: ${ex.message}")
+                    is IllegalStateException -> println("File error: ${ex.message}")
+                    is IOException -> println("Failed to connect to server: ${ex.message}")
+                    else -> println("Failed to load configuration: ${ex.message}")
+                }
             }
         }
     }
@@ -67,7 +70,7 @@ object ClientService {
         }
     }
 
-    fun sendRequestOnlyType(type: RequestType) {
-        sendRequest(Request(type))
+    fun sendRequestOnlyType(requestType: RequestType) {
+        sendRequest(Request(requestType))
     }
 }

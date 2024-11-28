@@ -72,3 +72,6 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### temporary ###
+temp/
